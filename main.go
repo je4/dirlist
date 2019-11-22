@@ -63,10 +63,12 @@ func main() {
 	csvWriter := csv.NewWriter(writer)
 	csvWriter.Write([]string{"folder", "size", "files", "subfolders"})
 
-	s, fo, fi := iterate(*dir, csvWriter)
-	fmt.Printf("%s: Size:%v / Folders:%v / Files:%v\n", filepath.ToSlash(*dir), s, fo, fi )
+	path := filepath.ToSlash(filepath.Clean(*dir))
+
+	s, fo, fi := iterate(path, csvWriter)
+	fmt.Printf("%s: Size:%v / Folders:%v / Files:%v\n", path, s, fo, fi )
 	csvWriter.Write([]string{
-		filepath.ToSlash(*dir),
+		path,
 		strconv.FormatInt(s, 10),
 		strconv.FormatInt(fi, 10),
 		strconv.FormatInt(fo, 10),
