@@ -74,7 +74,6 @@ func iterate(folder string, csvWriter *csv.Writer, checksum bool) (size int64, f
 			folders++
 			s, fo, fi, csf := iterate(fullpath, csvWriter, checksum)
 			io.Copy(folderHash, strings.NewReader(csf))
-			cs = fmt.Sprintf("%x", folderHash.Sum(nil))
 			fmt.Printf("%s: Size:%v / Folders:%v / Files:%v \n", filepath.ToSlash(fullpath), s, fo, fi)
 			data := []string{
 				"folder",
@@ -84,7 +83,7 @@ func iterate(folder string, csvWriter *csv.Writer, checksum bool) (size int64, f
 				strconv.FormatInt(fo, 10),
 			}
 			if checksum {
-				data = append(data, cs, "")
+				data = append(data, csf, "")
 			}
 			csvWriter.Write(data)
 			size += s
@@ -93,6 +92,8 @@ func iterate(folder string, csvWriter *csv.Writer, checksum bool) (size int64, f
 		}
 		//		fmt.Println(f.Name())
 	}
+	cs = fmt.Sprintf("%x", folderHash.Sum(nil))
+
 	return
 }
 
@@ -124,6 +125,7 @@ func main() {
 	s, fo, fi, cs:= iterate(path, csvWriter, *checksum)
 	fmt.Printf("%s: Size:%v / Folders:%v / Files:%v\n", path, s, fo, fi)
 	data := []string{
+		"folder",
 		path,
 		strconv.FormatInt(s, 10),
 		strconv.FormatInt(fi, 10),
