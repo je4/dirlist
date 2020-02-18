@@ -11,7 +11,7 @@ to be faster and more platform independent..._
 ```
 C:\daten\go\bin>dirlist
   -checksum
-        calculate checksums for all files (optional, slow)
+        calculate sha256 checksums for all files (optional, slow)
   -csv string
         output file
   -dir string
