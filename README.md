@@ -8,7 +8,15 @@ to be faster and more platform independent..._
 
 ## Syntax
 
-`dirlist -dir <folder> -csv <output file>`
+```
+C:\daten\go\bin>dirlist
+  -checksum
+        calculate checksums for all files (optional, slow)
+  -csv string
+        output file
+  -dir string
+        folder to start listing (default ".")
+```
 
 ```
 PS C:\daten\go\src> ..\bin\dirlist.exe -dir .\github.com\je4\dirlist\ -csv C:\temp\output.csv
