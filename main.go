@@ -30,10 +30,12 @@ func calcSha256(filename string) (string, error) {
 	return fmt.Sprintf("%x", h.Sum(nil)), nil
 }
 
-func iterate(folder string, csvWriter *csv.Writer, checksum bool) (size int64, folders int64, files int64, cs string) {
-	fileList, err := ioutil.ReadDir(folder)
+func iterate(folder string, csvWriter *csv.Writer, checksum bool) (size int64, folders int64, files int64, cs string, err error) {
+	var fileList []os.FileInfo
+	fileList, err = ioutil.ReadDir(folder)
 	if err != nil {
-		log.Fatal(err)
+		err = emperror.Wrapf(err, "cannot read %s", folder)
+		return
 	}
 
 	folderHash := sha256.New()
@@ -72,7 +74,7 @@ func iterate(folder string, csvWriter *csv.Writer, checksum bool) (size int64, f
 				continue
 			}
 			folders++
-			s, fo, fi, csf := iterate(fullpath, csvWriter, checksum)
+			s, fo, fi, csf, _ := iterate(fullpath, csvWriter, checksum)
 			io.Copy(folderHash, strings.NewReader(csf))
 			fmt.Printf("%s: Size:%v / Folders:%v / Files:%v \n", filepath.ToSlash(fullpath), s, fo, fi)
 			data := []string{
@@ -122,7 +124,7 @@ func main() {
 
 	path := filepath.ToSlash(filepath.Clean(*dir))
 
-	s, fo, fi, cs:= iterate(path, csvWriter, *checksum)
+	s, fo, fi, cs, _ := iterate(path, csvWriter, *checksum)
 	fmt.Printf("%s: Size:%v / Folders:%v / Files:%v\n", path, s, fo, fi)
 	data := []string{
 		"folder",
