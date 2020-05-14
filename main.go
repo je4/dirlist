@@ -74,11 +74,15 @@ func iterate(folder string, csvWriter *csv.Writer, checksum bool) (size int64, f
 				continue
 			}
 			folders++
-			s, fo, fi, csf, _ := iterate(fullpath, csvWriter, checksum)
+			s, fo, fi, csf, err := iterate(fullpath, csvWriter, checksum)
+			t := "folder"
+			if err != nil {
+				t = fmt.Sprintf("unreadable folder: %v", err)
+			}
 			io.Copy(folderHash, strings.NewReader(csf))
 			fmt.Printf("%s: Size:%v / Folders:%v / Files:%v \n", filepath.ToSlash(fullpath), s, fo, fi)
 			data := []string{
-				"folder",
+				t,
 				filepath.ToSlash(fullpath),
 				strconv.FormatInt(s, 10),
 				strconv.FormatInt(fi, 10),
