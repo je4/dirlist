@@ -32,6 +32,7 @@ func calcSha256(filename string) (string, error) {
 
 func iterate(folder string, csvWriter *csv.Writer, checksum bool) (size int64, folders int64, files int64, cs string, err error) {
 	var fileList []os.FileInfo
+	fmt.Sprintf("reading directory %s", folder)
 	fileList, err = ioutil.ReadDir(folder)
 	if err != nil {
 		err = emperror.Wrapf(err, "cannot read %s", folder)
